@@ -283,6 +283,9 @@ function datePicker(month) {
   let tds = document.querySelectorAll('td');
 
   for (let i = 0; i < tds.length; i++) {
+
+
+
     tds[i].addEventListener('click', function(event) {
       let target = event.target;
       target.classList.add('picked');
@@ -292,6 +295,7 @@ function datePicker(month) {
       for (let j = 0; j < trList.length; j++) {
         if (trList[j].classList.contains('picked')) {
           todayDayWeek.innerHTML = days[j];
+          trList[j].classList.remove('picked');
           console.log(j);
           console.log(days[j]);
         }
