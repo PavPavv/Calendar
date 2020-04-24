@@ -135,13 +135,60 @@ function createDays(firstDay, days) {
   }
 }
 
+
+// Показываем выбранный день в панели слева
+
+function datePicker(month) {
+  let months = [
+    'Января',
+    'Февраля',
+    'Марта',
+    'Апреля',
+    'Мая',
+    'Июня',
+    'Июля',
+    'Августа',
+    'Сентября',
+    'Октября',
+    'Ноября',
+    'Декабря'
+  ];
+  let tds = document.querySelectorAll('td');
+
+  for (let i = 0; i < tds.length; i++) { // Навешиваем прослушку событий на все td
+    tds[i].addEventListener('click', function(event) {
+      for (let i = 0; i < tds.length; i++) {
+        if (tds[i].classList.contains('picked-date')) {
+          tds[i].classList.remove('picked-date')
+        }
+      }
+
+      let target = event.target; // кликнутый элемент
+      target.classList.add('picked'); //  помечеам его
+      target.classList.add('picked-date');
+
+      let neededTr = target.parentNode; //  находим его родителя, т.е. tr
+      let trList = neededTr.childNodes; //  чтобы найти все tr только за неделю
+      for (let j = 0; j < trList.length; j++) { //  чтобы узнать индекс дня недели
+        if (trList[j].classList.contains('picked')) {
+          todayDayWeek.innerHTML = days[j]; //  и вывести его на странице
+          trList[j].classList.remove('picked'); // убираем уникальную метку за собой или она перестанет быть уникальтной и начнется каша
+        }
+      }
+      todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
+      todayNum.innerHTML = target.innerHTML;
+      todayMonth.innerHTML = months[month];
+    });
+  }
+}
+
+
 // !! Средний уровень абстракции
 // По умолчанию заполняем календарь днями текущего месяца
 
 function fillCalendar() {
   let month = date.getMonth() + 1;
   let monthDays = new Date(year, month, 0).getDate();
-
   let currentFirstDay = new Date(year, month - 1, 1).getDay();
 
   titleCalendarDate.innerHTML = months[month - 1] + ' ' + year;
@@ -151,7 +198,7 @@ function fillCalendar() {
 }
 
 
-// Анимация подгрузки элементов страницы
+// Анимация подгрузки элементов страницы и, по сути, главный метод, который запускает вместе с подгрузкой все остальные функции
 
 document.addEventListener('DOMContentLoaded', function() {
   let time = 400;
@@ -180,6 +227,12 @@ prevBtn.addEventListener('click', () => {
   let tds = document.querySelectorAll('td');
   let prevFirstDay = new Date(year, month - 1, 1).getDay();
   let prevMonthDays = new Date(year, month, 0).getDate();
+
+  for (let i = 0; i < tds.length; i++) {
+    if (tds[i].classList.contains('picked-date')) {
+      tds[i].classList.remove('picked-date')
+    }
+  }
 
   //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
   if (prevFirstDay === 0) {
@@ -213,6 +266,7 @@ prevBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(prevFirstDay);
   }
+  datePicker(month);  // Подключаем работу datePicker
 });
 
 
@@ -222,6 +276,12 @@ nextBtn.addEventListener('click', () => {
   let tds = document.querySelectorAll('td');
   let nextFirstDay = new Date(year, month + 1, 1).getDay();
   let nextMonthDays = new Date(year, month + 2, 0).getDate();
+
+  for (let i = 0; i < tds.length; i++) {
+    if (tds[i].classList.contains('picked-date')) {
+      tds[i].classList.remove('picked-date')
+    }
+  }
 
   // Конвертирует нумерацию анлг дней (вс - 0, пн - 1...) в рус (пн - 0, вт - 1...)
   if (nextFirstDay === 0) {
@@ -255,54 +315,5 @@ nextBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(nextFirstDay);
   }
-
+  datePicker(month);  // Подключаем работу datePicker
 });
-
-
-
-
-
-
-
-
-function datePicker(month) {
-  let months = [
-    'Января',
-    'Февраля',
-    'Марта',
-    'Апреля',
-    'Мая',
-    'Июня',
-    'Июля',
-    'Августа',
-    'Сентября',
-    'Октября',
-    'Ноября',
-    'Декабря'
-  ];
-  let tds = document.querySelectorAll('td');
-
-  for (let i = 0; i < tds.length; i++) {
-
-
-
-    tds[i].addEventListener('click', function(event) {
-      let target = event.target;
-      target.classList.add('picked');
-
-      let neededTr = target.parentNode;
-      let trList = neededTr.childNodes;
-      for (let j = 0; j < trList.length; j++) {
-        if (trList[j].classList.contains('picked')) {
-          todayDayWeek.innerHTML = days[j];
-          trList[j].classList.remove('picked');
-          console.log(j);
-          console.log(days[j]);
-        }
-      }
-      todayTitle.innerHTML = 'Вы выбрали:';
-      todayNum.innerHTML = target.innerHTML;
-      todayMonth.innerHTML = months[month];
-    });
-  }
-}
