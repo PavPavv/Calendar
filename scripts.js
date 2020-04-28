@@ -15,7 +15,6 @@ const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 
 
-
 // Объект даты и его глобальные значения (день месяца, месяц, год)
 
 let date = new Date();
