@@ -50,6 +50,7 @@ let days = [
 ];
 let titleCalendarDate = document.querySelector('.month');
 let currentMonthDay = date.getDate();
+let pickedYear;
 
 
 table.cellSpacing = '0';
@@ -105,6 +106,58 @@ function alwaysTodayOn(firstMonthDay) {
 }
 
 
+//  Запоминаем выбранный день при изменении состояния (при клике вперед-назад)
+
+function rememberPickedDay(firstMonthDay, m, y) {
+  let months = [
+    'Января',
+    'Февраля',
+    'Марта',
+    'Апреля',
+    'Мая',
+    'Июня',
+    'Июля',
+    'Августа',
+    'Сентября',
+    'Октября',
+    'Ноября',
+    'Декабря'
+  ];
+  let day = +todayNum.innerHTML;
+  let monthFromArr = todayMonth.innerHTML;
+  let monthNum;
+
+  months.forEach((item, i) => {
+    if (monthFromArr === item) {
+      monthNum = i;
+    }
+  });
+
+  console.log(monthNum);
+  console.log('-------------------------------------------');
+  let tds = document.querySelectorAll('td')
+  if (pickedYear === y && monthNum === month) {
+    console.log(pickedYear + ' - ' + y);
+    console.log(monthNum + ' - ' + month);
+    if (tds) {
+      for (let i = firstMonthDay; i < tds.length; i++) {
+        tds[day + 1].classList.add('picked-date1');
+      }
+    } else {
+      for (let i = 0; i < tds.length; i++) {
+        tds[i].classList.remove('picked-date1');
+      }
+    }
+  }
+
+  console.log(day);
+  console.log(monthNum);
+  console.log(month);
+  console.log(y);
+  console.log('________________________________________________');
+}
+
+
 //  Создаем 6 tr (шесть недель в нашем календаре)
 
 function createDays(firstDay, days) {
@@ -138,7 +191,7 @@ function createDays(firstDay, days) {
 
 // Показываем выбранный день в панели слева
 
-function datePicker(month) {
+function datePicker(month, year) {
   let months = [
     'Января',
     'Февраля',
@@ -157,7 +210,7 @@ function datePicker(month) {
 
   for (let i = 0; i < tds.length; i++) { // Навешиваем прослушку событий на все td
     tds[i].addEventListener('click', function(event) {
-      for (let i = 0; i < tds.length; i++) {
+      for (let i = 0; i < tds.length; i++) {  //  убираем дубли якоря выбранного дня, мы можем выбрать, по уловию, только 1 день
         if (tds[i].classList.contains('picked-date')) {
           tds[i].classList.remove('picked-date')
         }
@@ -178,6 +231,7 @@ function datePicker(month) {
       todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
       todayNum.innerHTML = target.innerHTML;
       todayMonth.innerHTML = months[month];
+      pickedYear = year;
     });
   }
 }
@@ -230,7 +284,7 @@ prevBtn.addEventListener('click', () => {
 
   for (let i = 0; i < tds.length; i++) {
     if (tds[i].classList.contains('picked-date')) {
-      tds[i].classList.remove('picked-date')
+      tds[i].classList.remove('picked-date');
     }
   }
 
@@ -266,7 +320,8 @@ prevBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(prevFirstDay);
   }
-  datePicker(month);  // Подключаем работу datePicker
+  datePicker(month, year);  // Подключаем работу datePicker
+  rememberPickedDay(prevMonthDays, month, year);
 });
 
 
@@ -315,5 +370,6 @@ nextBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(nextFirstDay);
   }
-  datePicker(month);  // Подключаем работу datePicker
+  datePicker(month, year);  // Подключаем работу datePicker
+  rememberPickedDay(nextFirstDay, month, year);
 });
