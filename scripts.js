@@ -78,7 +78,6 @@ table.cellSpacing = '0';
 function getToday() {
   let dayWeek = date.getDay() - 1;
 
-
   todayNum.innerHTML = day;
   todayMonth.innerHTML = monthsDecl[month];
   todayDayWeek.innerHTML = days[dayWeek];
@@ -165,9 +164,19 @@ function datePicker(month, year = globalYear) {
           trList[j].classList.remove('picked'); // убираем уникальную метку за собой или она перестанет быть уникальтной и начнется каша
         }
       }
-      todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
-      todayNum.innerHTML = target.innerHTML;
-      todayMonth.innerHTML = monthsDecl[month];
+
+      if (tds[i].classList.contains('picked-date') && tds[i].classList.contains('not-actual')) { // проверяем, если кликнутый день не входит в этот месяц, то показываем предыдущий месяц
+        todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
+        todayNum.innerHTML = target.innerHTML;
+        todayMonth.innerHTML = monthsDecl[month - 1];
+      } else {
+        todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
+        todayNum.innerHTML = target.innerHTML;
+        todayMonth.innerHTML = monthsDecl[month];
+      }
+      console.log(tds[i]);
+
+
 
       pickedYear = year;
     });
@@ -208,24 +217,22 @@ function rememberPickedDay(firstMonthDay, m, y) {
 
 // Находим и заполняем последние дни предыдущего месяца
 
-function lastDaysOfPrevMonth(firstCurMonthDay, month, globalYear) {
-  console.log('start working');
+function lastDaysOfPrevMonth(firstCurMonthDay, month = globalMonth, year = globalYear) {
   let tds = document.querySelectorAll('td');
-  let prevDays = new Date(year, month - 1, 0).getDate();
-  console.log(prevDays);
-  let prevMonthLastDays = prevDays - (firstCurMonthDay - 2);
-  console.log(firstCurMonthDay);
-  console.log(prevMonthLastDays);
+  let prevDays = new Date(year, month, 0).getDate();
+  let prevMonthLastDays = prevDays - (firstCurMonthDay - 1);
 
   for (let i = 0; i < tds.length; i++) {
-    if (i < firstCurMonthDay - 1) {
+    if (tds[i].classList.contains('not-actual')) {
+      tds[i].classList.remove('not-actual')
+    }
+
+    if (i < firstCurMonthDay) {
       tds[i].classList.add('not-actual');
       tds[i].innerHTML = prevMonthLastDays;
       prevMonthLastDays++;
     }
   }
-
-  console.log('ends working');
 }
 
 
@@ -242,7 +249,7 @@ function fillCalendar() {
 
   createDays(currentFirstDay - 1, monthDays); //  Вызываем вспомогательную функцию для создания tr и td в них
   alwaysTodayOn(currentFirstDay); //  Функция для выделения текущего дня
-  lastDaysOfPrevMonth(currentFirstDay, month);
+  lastDaysOfPrevMonth(currentFirstDay - 1);
 }
 
 
@@ -319,8 +326,10 @@ prevBtn.addEventListener('click', () => {
     alwaysTodayOn(prevFirstDay);
   }
 
+  console.log('month in prev : ' + month);
   datePicker(month, year);  // запускаем работу datePicker
   rememberPickedDay(prevFirstDay, month, year);
+  lastDaysOfPrevMonth(prevFirstDay, month, year);
 });
 
 
@@ -372,4 +381,5 @@ nextBtn.addEventListener('click', () => {
 
   datePicker(month, year);  // Подключаем работу datePicker
   rememberPickedDay(nextFirstDay, month, year);
+  lastDaysOfPrevMonth(nextFirstDay, month, year);
 });
