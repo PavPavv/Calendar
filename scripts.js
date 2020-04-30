@@ -15,7 +15,6 @@ const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 
 
-
 // Объект даты и его глобальные значения (день месяца, месяц, год)
 
 let date = new Date();
@@ -54,6 +53,7 @@ let pickedYear;
 
 
 table.cellSpacing = '0';
+
 
 // ! Самый низкий уровень абстракции
 // Текущий день по умолчанию в левом поле
@@ -217,8 +217,7 @@ function datePicker(month, year) {
       }
 
       let target = event.target; // кликнутый элемент
-      target.classList.add('picked'); //  помечеам его
-      target.classList.add('picked-date');
+      target.classList.add('picked', 'picked-date'); //  помечеам его, отмечаем с помощью класса 'picked'и выделяем с помощью класса 'picked-date'
 
       let neededTr = target.parentNode; //  находим его родителя, т.е. tr
       let trList = neededTr.childNodes; //  чтобы найти все tr только за неделю
@@ -321,7 +320,7 @@ prevBtn.addEventListener('click', () => {
     alwaysTodayOn(prevFirstDay);
   }
   datePicker(month, year);  // Подключаем работу datePicker
-  rememberPickedDay(prevMonthDays, month, year);
+  //rememberPickedDay(prevMonthDays, month, year);
 });
 
 
@@ -371,5 +370,5 @@ nextBtn.addEventListener('click', () => {
     alwaysTodayOn(nextFirstDay);
   }
   datePicker(month, year);  // Подключаем работу datePicker
-  rememberPickedDay(nextFirstDay, month, year);
+  //rememberPickedDay(nextFirstDay, month, year);
 });
