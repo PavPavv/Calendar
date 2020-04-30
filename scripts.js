@@ -174,10 +174,6 @@ function datePicker(month, year = globalYear) {
         todayNum.innerHTML = target.innerHTML;
         todayMonth.innerHTML = monthsDecl[month];
       }
-      console.log(tds[i]);
-
-
-
       pickedYear = year;
     });
   }
@@ -235,6 +231,27 @@ function lastDaysOfPrevMonth(firstCurMonthDay, month = globalMonth, year = globa
   }
 }
 
+function firstDaysOfNextMonth(month = globalMonth, year = globalYear) {
+  let tds = document.querySelectorAll('td');
+  let days = new Date(year, month, 0).getDate();
+  //let prevMonthLastDays = prevDays - (firstCurMonthDay - 1);
+
+  console.log('days : ' + days);
+  console.log('globalMonth : ' + globalMonth);
+  console.log('month : ' + (month));
+  // for (let i = 0; i < tds.length; i++) {
+  //   if (tds[i].classList.contains('not-actual')) {
+  //     tds[i].classList.remove('not-actual')
+  //   }
+  //
+  //   if (i < firstCurMonthDay) {
+  //     tds[i].classList.add('not-actual');
+  //     tds[i].innerHTML = prevMonthLastDays;
+  //     prevMonthLastDays++;
+  //   }
+  // }
+}
+
 
 // !! Средний уровень абстракции
 // По умолчанию заполняем календарь днями текущего месяца
@@ -243,13 +260,13 @@ function fillCalendar() {
   let month = date.getMonth() + 1;
   let monthDays = new Date(globalYear, month, 0).getDate();
   let currentFirstDay = new Date(globalYear, month - 1, 1).getDay();
-  console.log('currentFirstDay is ' + currentFirstDay);
 
   titleCalendarDate.innerHTML = months[month - 1] + ' ' + globalYear;
 
   createDays(currentFirstDay - 1, monthDays); //  Вызываем вспомогательную функцию для создания tr и td в них
   alwaysTodayOn(currentFirstDay); //  Функция для выделения текущего дня
   lastDaysOfPrevMonth(currentFirstDay - 1);
+  firstDaysOfNextMonth();
 }
 
 
@@ -326,7 +343,6 @@ prevBtn.addEventListener('click', () => {
     alwaysTodayOn(prevFirstDay);
   }
 
-  console.log('month in prev : ' + month);
   datePicker(month, year);  // запускаем работу datePicker
   rememberPickedDay(prevFirstDay, month, year);
   lastDaysOfPrevMonth(prevFirstDay, month, year);
