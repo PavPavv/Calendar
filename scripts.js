@@ -13,17 +13,17 @@ const todayMonth = document.querySelector('.calendar-today-month');
 const todayDayWeek = document.querySelector('.calendar-today-day');
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
+const titleCalendarDate = document.querySelector('.month');
 
 
 // Объект даты и его глобальные значения (день месяца, месяц, год)
 
+// эти переменные всегда возвращает текущее значение даты, она не модифицируется никак в коде, это важно!
 let date = new Date();
 let globalYear = date.getFullYear();
 let globalMonth = date.getMonth();
 let globalDayWeek = date.getDay();
-let day = date.getDate();
-let month = date.getMonth();
-let year = date.getFullYear();
+let currentMonthDay = date.getDate();
 let months = [
   'Январь',
   'Февраль',
@@ -47,8 +47,25 @@ let days = [
   'Суббота',
   'Воскресенье'
 ];
-let titleCalendarDate = document.querySelector('.month');
-let currentMonthDay = date.getDate();
+let monthsDecl = [
+  'Января',
+  'Февраля',
+  'Марта',
+  'Апреля',
+  'Мая',
+  'Июня',
+  'Июля',
+  'Августа',
+  'Сентября',
+  'Октября',
+  'Ноября',
+  'Декабря'
+];
+
+//  эти глобальные переменные модифицируются в коде и их именения видны другим функциям
+let day = date.getDate();
+let month = date.getMonth();
+let year = date.getFullYear(); // это значение переписывается при клике на предудущий/следующий месяц
 let pickedYear;
 
 
@@ -60,23 +77,10 @@ table.cellSpacing = '0';
 
 function getToday() {
   let dayWeek = date.getDay() - 1;
-  let months = [
-    'Января',
-    'Февраля',
-    'Марта',
-    'Апреля',
-    'Мая',
-    'Июня',
-    'Июля',
-    'Августа',
-    'Сентября',
-    'Октября',
-    'Ноября',
-    'Декабря'
-  ];
+
 
   todayNum.innerHTML = day;
-  todayMonth.innerHTML = months[month];
+  todayMonth.innerHTML = monthsDecl[month];
   todayDayWeek.innerHTML = days[dayWeek];
 }
 
@@ -101,51 +105,6 @@ function alwaysTodayOn(firstMonthDay) {
   for(let i = firstMonthDay; i < tds.length; i++) { // Выделяем сегордняшний день
     if (tds[i - 1] === tds[currentMonthDay]) {
       tds[i].classList.add('currentDay');
-    }
-  }
-}
-
-
-//  Запоминаем выбранный день при изменении состояния (при клике вперед-назад)
-
-function rememberPickedDay(firstMonthDay, m, y) {
-  const staticNum = 1;
-  let months = [
-    'Января',
-    'Февраля',
-    'Марта',
-    'Апреля',
-    'Мая',
-    'Июня',
-    'Июля',
-    'Августа',
-    'Сентября',
-    'Октября',
-    'Ноября',
-    'Декабря'
-  ];
-  let day = +todayNum.innerHTML;
-  let monthFromArr = todayMonth.innerHTML;
-  let monthNum;
-
-  months.forEach((item, i) => {
-    if (monthFromArr === item) {
-      monthNum = i;
-    }
-  });
-
-  let tds = document.querySelectorAll('td')
-  if (pickedYear === y && monthNum === month) {
-
-    for (let i = firstMonthDay; i < tds.length; i++) {
-      let numDay = tds[i].innerHTML;
-      if (numDay == day) {
-        tds[i].classList.add('picked-date');
-      }
-    }
-  } else {
-    for (let i = firstMonthDay; i < tds.length; i++) {
-      tds[i].classList.remove('picked-date');
     }
   }
 }
@@ -184,21 +143,7 @@ function createDays(firstDay, days) {
 
 // Показываем выбранный день в панели слева
 
-function datePicker(month, year) {
-  let months = [
-    'Января',
-    'Февраля',
-    'Марта',
-    'Апреля',
-    'Мая',
-    'Июня',
-    'Июля',
-    'Августа',
-    'Сентября',
-    'Октября',
-    'Ноября',
-    'Декабря'
-  ];
+function datePicker(month, year = globalYear) {
   let tds = document.querySelectorAll('td');
 
   for (let i = 0; i < tds.length; i++) { // Навешиваем прослушку событий на все td
@@ -222,8 +167,41 @@ function datePicker(month, year) {
       }
       todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
       todayNum.innerHTML = target.innerHTML;
-      todayMonth.innerHTML = months[month];
+      todayMonth.innerHTML = monthsDecl[month];
+
+      pickedYear = year;
     });
+  }
+}
+
+
+//  Запоминаем выбранный день при изменении состояния (при клике вперед-назад)
+
+function rememberPickedDay(firstMonthDay, m, y) {
+  const staticNum = 1;
+  let day = +todayNum.innerHTML;
+  let monthFromArr = todayMonth.innerHTML;
+  let monthNum;
+
+  monthsDecl.forEach((item, i) => {
+    if (monthFromArr === item) {
+      monthNum = i;
+    }
+  });
+
+  let tds = document.querySelectorAll('td')
+  if (pickedYear === y && monthNum === month) {
+
+    for (let i = firstMonthDay; i < tds.length; i++) {
+      let numDay = tds[i].innerHTML;
+      if (numDay == day) {
+        tds[i].classList.add('picked-date');
+      }
+    }
+  } else {
+    for (let i = firstMonthDay; i < tds.length; i++) {
+      tds[i].classList.remove('picked-date');
+    }
   }
 }
 
@@ -233,10 +211,10 @@ function datePicker(month, year) {
 
 function fillCalendar() {
   let month = date.getMonth() + 1;
-  let monthDays = new Date(year, month, 0).getDate();
-  let currentFirstDay = new Date(year, month - 1, 1).getDay();
+  let monthDays = new Date(globalYear, month, 0).getDate();
+  let currentFirstDay = new Date(globalYear, month - 1, 1).getDay();
 
-  titleCalendarDate.innerHTML = months[month - 1] + ' ' + year;
+  titleCalendarDate.innerHTML = months[month - 1] + ' ' + globalYear;
 
   createDays(currentFirstDay - 1, monthDays); //  Вызываем вспомогательную функцию для создания tr и td в них
   alwaysTodayOn(currentFirstDay); //  Функция для выделения текущего дня
@@ -260,7 +238,6 @@ document.addEventListener('DOMContentLoaded', function() {
   clearInterval();
 
   setTimeout(() => {
-    //calendar.style.opacity = '1';
     calendar.style.marginLeft = '0';
     fillCalendar();
     getToday();
@@ -282,8 +259,7 @@ prevBtn.addEventListener('click', () => {
     }
   }
 
-  //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
-  if (prevFirstDay === 0) {
+  if (prevFirstDay === 0) { //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
     prevFirstDay = 6;
   } else {
     prevFirstDay--;
@@ -293,8 +269,8 @@ prevBtn.addEventListener('click', () => {
 
   let dayCounter = 1;
   let actualMonthDays = prevMonthDays + (prevFirstDay - 1);
-  //  Выводим только дни текущего месяца, начиная с номера первого дня месяца
-  for(let i = prevFirstDay; i < tds.length; i++) {
+
+  for(let i = prevFirstDay; i < tds.length; i++) {    //  Выводим только дни текущего месяца, начиная с номера первого дня месяца
       tds[i].innerHTML = dayCounter;
       dayCounter++;
       if (i > actualMonthDays) {  //Все, что не в ходит в текущий месяц, очищаем значения
@@ -314,7 +290,6 @@ prevBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(prevFirstDay);
   }
-  pickedYear = year;
 
   datePicker(month, year);  // запускаем работу datePicker
   rememberPickedDay(prevFirstDay, month, year);
@@ -335,8 +310,7 @@ nextBtn.addEventListener('click', () => {
     }
   }
 
-  // Конвертирует нумерацию анлг дней (вс - 0, пн - 1...) в рус (пн - 0, вт - 1...)
-  if (nextFirstDay === 0) {
+  if (nextFirstDay === 0) { // Конвертирует нумерацию анлг дней (вс - 0, пн - 1...) в рус (пн - 0, вт - 1...)
     nextFirstDay = 6;
   } else {
     nextFirstDay--;
@@ -355,8 +329,8 @@ nextBtn.addEventListener('click', () => {
 
   let dayCounter = 1;
   let actualMonthDays = nextMonthDays + (nextFirstDay - 1);
-  //  Выводим только дни текущего месяца, начиная с номера первого дня месяца
-  for(let i = nextFirstDay; i < tds.length; i++) {
+
+  for(let i = nextFirstDay; i < tds.length; i++) {  //  Выводим только дни текущего месяца, начиная с номера первого дня месяца
       tds[i].innerHTML = dayCounter;
       dayCounter++;
       if (i > actualMonthDays) {  //Все, что не в ходит в текущий месяц, очищаем значения
@@ -367,8 +341,7 @@ nextBtn.addEventListener('click', () => {
   if (year === globalYear && month === globalMonth) { // Всегда выделяем текущий день после работы стрелок
     alwaysTodayOn(nextFirstDay);
   }
-  pickedYear = year;
 
   datePicker(month, year);  // Подключаем работу datePicker
-  //rememberPickedDay(nextFirstDay, month, year);
+  rememberPickedDay(nextFirstDay, month, year);
 });
