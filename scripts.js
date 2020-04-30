@@ -206,6 +206,29 @@ function rememberPickedDay(firstMonthDay, m, y) {
 }
 
 
+// Находим и заполняем последние дни предыдущего месяца
+
+function lastDaysOfPrevMonth(firstCurMonthDay, month, globalYear) {
+  console.log('start working');
+  let tds = document.querySelectorAll('td');
+  let prevDays = new Date(year, month - 1, 0).getDate();
+  console.log(prevDays);
+  let prevMonthLastDays = prevDays - (firstCurMonthDay - 2);
+  console.log(firstCurMonthDay);
+  console.log(prevMonthLastDays);
+
+  for (let i = 0; i < tds.length; i++) {
+    if (i < firstCurMonthDay - 1) {
+      tds[i].classList.add('not-actual');
+      tds[i].innerHTML = prevMonthLastDays;
+      prevMonthLastDays++;
+    }
+  }
+
+  console.log('ends working');
+}
+
+
 // !! Средний уровень абстракции
 // По умолчанию заполняем календарь днями текущего месяца
 
@@ -213,12 +236,17 @@ function fillCalendar() {
   let month = date.getMonth() + 1;
   let monthDays = new Date(globalYear, month, 0).getDate();
   let currentFirstDay = new Date(globalYear, month - 1, 1).getDay();
+  console.log('currentFirstDay is ' + currentFirstDay);
 
   titleCalendarDate.innerHTML = months[month - 1] + ' ' + globalYear;
 
   createDays(currentFirstDay - 1, monthDays); //  Вызываем вспомогательную функцию для создания tr и td в них
   alwaysTodayOn(currentFirstDay); //  Функция для выделения текущего дня
+  lastDaysOfPrevMonth(currentFirstDay, month);
 }
+
+
+
 
 
 
