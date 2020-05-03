@@ -204,6 +204,7 @@ section{
   top: 31px;
   left: 50px;
   transform: rotate(270deg);
+  cursor: pointer;
 }
 
 .calendar-nav a:last-child{
@@ -211,6 +212,7 @@ section{
   top: 31px;
   right: 55px;
   transform: rotate(90deg);
+  cursor: pointer;
 }
 
 
@@ -241,10 +243,10 @@ section{
   width: 90px;
 	height: 90px;
 	border-radius: 50%;
-  border: 4px solid #003E85;
+  border: 2px solid #003E85;
 	margin: 40px auto;
 	text-transform: uppercase;
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Barlow', sans-serif;
 	font-size: 1.2em;
 	text-align: center;
 	color: #282C34;
@@ -261,4 +263,65 @@ section{
   display: inline-block;
   text-align: center;
   width: 8px;
+}
+
+
+/* медиа стили */
+
+@media (max-width: 750px) {
+
+  .section-1{
+    height: 800px;
+    align-items: flex-start;
+    padding-top: 50px;
+  }
+
+  .section-1 .container{
+    justify-content: flex-start;
+  }
+
+  #calendar{
+    flex-direction: column;
+    width: 70%;
+  }
+
+  .calendar-day,
+  .calendar-dates {
+    padding: 60px;
+  }
+
+  .calendar-dates{
+    margin-top: 30px;
+  }
+
+  .month{
+    left: 36%;
+    top: 15%;
+  }
+
+  .calendar-nav a:first-child{
+    top: 15%;
+    left: 30%;
+  }
+
+  .calendar-nav a:last-child{
+    top: 15%;
+    right: 30%;
+  }
+
+  #clock{
+    top: 290px;
+    left: 54%;
+  }
+
+}
+
+@media (max-width: 650px) {
+  body{
+    font-size: 14px;
+  }
+
+  .header-link{
+    font-size: 0.7em;
+  }
 }
