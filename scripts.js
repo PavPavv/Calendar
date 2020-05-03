@@ -22,7 +22,6 @@ const titleCalendarDate = document.querySelector('.month');
 let date = new Date();
 let globalYear = date.getFullYear();
 let globalMonth = date.getMonth();
-let globalDayWeek = date.getDay();
 let currentMonthDay = date.getDate();
 let months = [
   'Январь',
@@ -73,14 +72,24 @@ table.cellSpacing = '0';
 
 
 // ! Самый низкий уровень абстракции
+
 // Текущий день по умолчанию в левом поле
 
 function getToday() {
-  let dayWeek = date.getDay() - 1;
+  let dayWeek = date.getDay();
 
-  todayNum.innerHTML = day;
+  if (dayWeek === 0) {  //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
+    dayWeek = 6;
+  } else {
+    dayWeek ++;
+  }
+
+  todayNum.innerHTML = currentMonthDay;
   todayMonth.innerHTML = monthsDecl[month];
   todayDayWeek.innerHTML = days[dayWeek];
+
+  console.log(day);
+  console.log(dayWeek);
 }
 
 
@@ -102,7 +111,7 @@ function clearTable(elem) {
 function alwaysTodayOn(firstMonthDay) {
   let tds = document.querySelectorAll('td');
   for(let i = firstMonthDay; i < tds.length; i++) { // Выделяем сегордняшний день
-    if (tds[i - 1] === tds[currentMonthDay]) {
+    if (tds[i].innerHTML == currentMonthDay) {
       tds[i].classList.add('currentDay');
     }
   }
@@ -130,12 +139,8 @@ function createDays(firstDay, days) {
   let dayCounter = 1;
 
   for(let i = firstDay; i < tds.length; i++) {  //  Выводим только дни текущего месяца, начиная с номера первого дня месяца
-      tds[i].innerHTML = dayCounter;
-      dayCounter++;
-
-      if (i > days + 1) {  //Все, что не в ходит в текущий месяц, очищаем значения
-        tds[i].innerHTML = '';
-      }
+    tds[i].innerHTML = dayCounter;
+    dayCounter++; // лишнее потом обрежется функцией firstDaysOfNextMonth()
   }
 }
 
@@ -166,14 +171,14 @@ function datePicker(month, year = globalYear) {
       }
 
       if (tds[i].classList.contains('picked-date') && tds[i].classList.contains('not-actual')) { // проверяем, если кликнутый день не входит в этот месяц, то показываем предыдущий месяц
-        todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
-        todayNum.innerHTML = target.innerHTML;
         todayMonth.innerHTML = monthsDecl[month - 1];
+      } else if (tds[i].classList.contains('picked-date') && tds[i].classList.contains('not-actual-next')) {  // проверяем, если кликнутый день не входит в этот месяц, то показываем следующий месяц
+        todayMonth.innerHTML = monthsDecl[month + 1];
       } else {
-        todayTitle.innerHTML = 'Вы выбрали:'; //  заполняем оставшиеся значения
-        todayNum.innerHTML = target.innerHTML;
         todayMonth.innerHTML = monthsDecl[month];
       }
+      todayTitle.innerHTML = 'Вы выбрали:';
+      todayNum.innerHTML = target.innerHTML;
       pickedYear = year;
     });
   }
@@ -231,25 +236,24 @@ function lastDaysOfPrevMonth(firstCurMonthDay, month = globalMonth, year = globa
   }
 }
 
-function firstDaysOfNextMonth(month = globalMonth, year = globalYear) {
+function firstDaysOfNextMonth(firstCurMonthDay, month = globalMonth, year = globalYear) {
   let tds = document.querySelectorAll('td');
-  let days = new Date(year, month, 0).getDate();
-  //let prevMonthLastDays = prevDays - (firstCurMonthDay - 1);
+  let thisMonthDays = new Date(year, month + 1, 0).getDate();
+  let startIndex = firstCurMonthDay + thisMonthDays;
+  let nextMonthCounter = 1;
 
-  console.log('days : ' + days);
-  console.log('globalMonth : ' + globalMonth);
-  console.log('month : ' + (month));
-  // for (let i = 0; i < tds.length; i++) {
-  //   if (tds[i].classList.contains('not-actual')) {
-  //     tds[i].classList.remove('not-actual')
-  //   }
-  //
-  //   if (i < firstCurMonthDay) {
-  //     tds[i].classList.add('not-actual');
-  //     tds[i].innerHTML = prevMonthLastDays;
-  //     prevMonthLastDays++;
-  //   }
-  // }
+  for (let i = 0; i < tds.length; i++) {
+    if (tds[i].classList.contains('not-actual-next')) {
+      tds[i].classList.remove('not-actual-next')
+    }
+  }
+
+  for (let i = startIndex; i < tds.length; i++) {
+
+    tds[i].classList.add('not-actual-next');
+    tds[i].innerHTML = nextMonthCounter;
+    nextMonthCounter++;
+  }
 }
 
 
@@ -266,14 +270,8 @@ function fillCalendar() {
   createDays(currentFirstDay - 1, monthDays); //  Вызываем вспомогательную функцию для создания tr и td в них
   alwaysTodayOn(currentFirstDay); //  Функция для выделения текущего дня
   lastDaysOfPrevMonth(currentFirstDay - 1);
-  firstDaysOfNextMonth();
+  firstDaysOfNextMonth(currentFirstDay - 1);
 }
-
-
-
-
-
-
 
 
 // Анимация подгрузки элементов страницы и, по сути, главный метод, который запускает вместе с подгрузкой все остальные функции
@@ -291,8 +289,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   setTimeout(() => {
     calendar.style.marginLeft = '0';
-    fillCalendar();
     getToday();
+    fillCalendar();
     datePicker(globalMonth);
   }, 1800)
 });
@@ -346,6 +344,7 @@ prevBtn.addEventListener('click', () => {
   datePicker(month, year);  // запускаем работу datePicker
   rememberPickedDay(prevFirstDay, month, year);
   lastDaysOfPrevMonth(prevFirstDay, month, year);
+  firstDaysOfNextMonth(prevFirstDay, month, year);
 });
 
 
@@ -398,4 +397,35 @@ nextBtn.addEventListener('click', () => {
   datePicker(month, year);  // Подключаем работу datePicker
   rememberPickedDay(nextFirstDay, month, year);
   lastDaysOfPrevMonth(nextFirstDay, month, year);
+  firstDaysOfNextMonth(nextFirstDay, month, year);
 });
+
+
+// Часы
+
+function correctTimeDisplay(timeType) {
+  if (timeType < 10) {
+    return timeType = '0' + timeType;
+  } else {
+    return timeType;
+  }
+}
+
+function udpateTime() {
+  let date = new Date();
+  let clock = document.querySelector('#clock');
+  let hours = correctTimeDisplay(date.getHours());
+  let minutes = correctTimeDisplay(date.getMinutes());
+  let seconds = correctTimeDisplay(date.getSeconds());
+
+  clock.firstElementChild.innerHTML = hours;
+  clock.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = minutes;
+  clock.lastElementChild.innerHTML = seconds;
+}
+
+function clockStart() {
+  setInterval(udpateTime, 1000);
+  udpateTime();
+}
+
+clockStart();

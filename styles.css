@@ -78,6 +78,7 @@ section{
 /* Календарь */
 
 #calendar{
+  position: relative;
   display: flex;
   width: 600px;
   height: 300px;
@@ -185,6 +186,10 @@ section{
   color: #cccccc;
 }
 
+.not-actual-next{
+  color: #cccccc;
+}
+
 .calendar-nav{
   display: flex;
 }
@@ -221,4 +226,39 @@ section{
 
 .picked-date1{
   border: 1px solid #003E85!important;
+}
+
+
+/* Секция с часами */
+
+#clock{
+  position: absolute;
+  display: flex;
+	justify-content: center;
+	align-items: center;
+  top: 60px;
+  left: 248px;
+  width: 90px;
+	height: 90px;
+	border-radius: 50%;
+  border: 4px solid #003E85;
+	margin: 40px auto;
+	text-transform: uppercase;
+  font-family: 'Roboto Mono', monospace;
+	font-size: 1.2em;
+	text-align: center;
+	color: #282C34;
+	background: #ffffff;
+}
+
+.hour,
+.min,
+.sec{
+  width: 20px;
+}
+
+.separator{
+  display: inline-block;
+  text-align: center;
+  width: 8px;
 }
