@@ -48,9 +48,6 @@ a{
   transition: .3s;
 }
 
-.header-link:hover{
-
-}
 
 /* Секция с календарем */
 
@@ -204,7 +201,7 @@ section{
   top: 31px;
   left: 50px;
   transform: rotate(270deg);
-  cursor: pointer;
+  cursor: default;
 }
 
 .calendar-nav a:last-child{
@@ -212,7 +209,7 @@ section{
   top: 31px;
   right: 55px;
   transform: rotate(90deg);
-  cursor: pointer;
+  cursor: default;
 }
 
 
@@ -324,4 +321,74 @@ section{
   .header-link{
     font-size: 0.7em;
   }
+
+  #clock {
+    top: 271px;
+    left: 54%;
+  }
+
+}
+
+@media (max-width: 570px) {
+  .month{
+    left: 31%;
+  }
+
+  .calendar-nav a:first-child{
+    left: 24%;
+  }
+
+  .calendar-nav a:last-child{
+    right: 23%;
+  }
+}
+
+@media (max-width: 400px) {
+
+  .header-link{
+    margin-right: 2em;
+  }
+
+  #calendar{
+    width: 62%;
+  }
+
+  .month{
+    left: 29%;
+  }
+
+  .calendar-nav a:first-child{
+    left: 23%;
+  }
+
+  .calendar-nav a:last-child{
+    right: 20%;
+  }
+}
+
+@media (max-width: 350px) {
+  #calendar{
+    width: 52%;
+  }
+
+  .month{
+    left: 24%;
+    top: 17%;
+  }
+
+  .calendar-nav a:first-child{
+    left: 14%;
+    top: 17%;
+  }
+
+  .calendar-nav a:last-child{
+    right: 13%;
+    top: 17%;
+  }
+
+  #clock {
+    top: 271px;
+    left: 56%;
+  }
+
 }

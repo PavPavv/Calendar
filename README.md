@@ -7,3 +7,4 @@ This calendar should do:
 * skip previous/next month by click at left/right arrow
 * display current date by default
 * display picked date from right pane at the left pane
+* display clock with with hh:mm:ss format by default
