@@ -145,7 +145,7 @@ section{
 .month{
   position: absolute;
   top: 30px;
-  left: 79px;
+  left: 80px;
   width: 140px;
   font-size: 1.1em;
   font-weight: bold;
@@ -199,7 +199,7 @@ section{
 .calendar-nav a:first-child{
   position: absolute;
   top: 31px;
-  left: 50px;
+  left: 52px;
   transform: rotate(270deg);
   cursor: default;
 }
@@ -207,7 +207,7 @@ section{
 .calendar-nav a:last-child{
   position: absolute;
   top: 31px;
-  right: 55px;
+  right: 52px;
   transform: rotate(90deg);
   cursor: default;
 }
