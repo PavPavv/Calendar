@@ -77,19 +77,18 @@ table.cellSpacing = '0';
 
 function getToday() {
   let dayWeek = date.getDay();
+  console.log(dayWeek);
 
   if (dayWeek === 0) {  //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
     dayWeek = 6;
   } else {
-    dayWeek ++;
+    dayWeek --;
   }
 
   todayNum.innerHTML = currentMonthDay;
   todayMonth.innerHTML = monthsDecl[month];
   todayDayWeek.innerHTML = days[dayWeek];
 
-  console.log(day);
-  console.log(dayWeek);
 }
 
 
