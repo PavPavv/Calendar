@@ -13,11 +13,11 @@
 <body>
   <header class="header">
     <div class="container">
-      <a href="#" class="header-link">Time</a>
-      <a href="#" class="header-link">Temps</a>
-      <a href="#" class="header-link">Zeit</a>
-      <a href="#" class="header-link">Время</a>
-      <a href="#" class="header-link">Tempus</a>
+      <a href="#" class="header-link">Нью-Йорк</a>
+      <a href="#" class="header-link">Лондон</a>
+      <a href="#" class="header-link">Москва</a>
+      <a href="#" class="header-link active-city">Самара</a>
+      <a href="#" class="header-link">Токио</a>
     </div>
   </header>
   <section class="section-1">
@@ -71,11 +71,24 @@
           <span class="separator">:</span>
           <span class="sec">ss</span>
     	  </div>
+        <div id="analogClock">
+          <div class="clock-wrap">
+            <div class="analog">
+              <div class="cogs">
+                <div class="cog1"></div>
+                <div class="cog2"></div>
+              </div>
+              <div class="analog-hour"></div>
+              <div class="analog-min"></div>
+              <div class="analog-sec"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
   <section class="section-2">
-
+    <button id="testBtn">test</button>
   </section>
 
   <script src="scripts.js"></script>

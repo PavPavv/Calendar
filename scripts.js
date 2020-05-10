@@ -4,6 +4,7 @@
 const header = document.querySelector('.header');
 const headerLinks = document.querySelectorAll('.header-link');
 const calendar = document.querySelector('#calendar');
+const analogClock = document.querySelector('#analogClock');
 const section2 = document.querySelector('.section-2');
 const table = document.querySelector('table');
 const tbody = document.querySelector('tbody');
@@ -14,6 +15,7 @@ const todayDayWeek = document.querySelector('.calendar-today-day');
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 const titleCalendarDate = document.querySelector('.month');
+const testBtn = document.querySelector('#testBtn');
 
 
 // Объект даты и его глобальные значения (день месяца, месяц, год)
@@ -77,12 +79,11 @@ table.cellSpacing = '0';
 
 function getToday() {
   let dayWeek = date.getDay();
-  console.log(dayWeek);
 
   if (dayWeek === 0) {  //  Конвертирует нумерацию анлг дней (вс - 0) в рус (пн - 0)
     dayWeek = 6;
   } else {
-    dayWeek --;
+    dayWeek--;
   }
 
   todayNum.innerHTML = currentMonthDay;
@@ -291,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getToday();
     fillCalendar();
     datePicker(globalMonth);
+    analogClockGo();
   }, 1800)
 });
 
@@ -428,3 +430,37 @@ function clockStart() {
 }
 
 clockStart();
+
+
+
+function flipClock() {
+  calendar.classList.toggle('calendar-rotate');
+  setTimeout(() => {
+    analogClock.classList.toggle('show');
+  },600);
+  clearTimeout();
+}
+
+function analogClockGo() {
+  let h = document.querySelector('.analog-hour');
+  let m = document.querySelector('.analog-min');
+  let s = document.querySelector('.analog-sec');
+
+  function analogTime() {
+    let d = new Date();
+    let hh = (d.getHours() * 30) + (d.getMinutes() / 2);
+    let mm = d.getMinutes() * 6;
+    let ss = d.getSeconds() * 6;
+
+    h.style.transform = `rotate(${hh}deg)`;
+    m.style.transform = `rotate(${mm}deg)`;
+    s.style.transform = `rotate(${ss}deg)`;
+  }
+
+  setInterval(analogTime, 1000);
+}
+
+
+
+
+testBtn.addEventListener('click', flipClock);
