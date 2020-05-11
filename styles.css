@@ -46,10 +46,7 @@ a{
   font-size: 1em;
   color: #20232A;
   transition: .3s;
-}
-
-.header-link:hover{
-  color: #003E85!important;
+  outline: none;
 }
 
 .active-city{
@@ -69,10 +66,38 @@ section{
   width: 100%;
   align-items: center;
   justify-content: center;
-  height: 340px;
+  flex-direction: column;
+  height: 420px;
   margin-top: 40px;
   background: #282C34;
   transition: 2.9s;
+}
+
+.toggle-btn{
+  position: relative;
+  width: 40px;
+  height: 20px;
+  border-radius: 40px;
+  border: 1px solid #000000;
+  margin-top: -20px;
+  margin-bottom: 25px;
+  background: #0F1218;
+  cursor: pointer;
+}
+
+.toggle-pin{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #282C34;
+  transition: .3s linear;
+}
+
+.toggle-pin-moved{
+  left: 20px!important;
 }
 
 .section-1 .container{
@@ -377,7 +402,7 @@ section{
   width: 90px;
   height: 50px;
   border-radius: 4px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,.5);
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,.5);
   overflow: hidden;
   background: #333;
 }

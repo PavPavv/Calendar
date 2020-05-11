@@ -15,7 +15,7 @@ const todayDayWeek = document.querySelector('.calendar-today-day');
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 const titleCalendarDate = document.querySelector('.month');
-const testBtn = document.querySelector('#testBtn');
+const toggleBtn = document.querySelector('#toggle-btn');
 
 
 // Объект даты и его глобальные значения (день месяца, месяц, год)
@@ -277,6 +277,7 @@ function fillCalendar() {
 // Анимация подгрузки элементов страницы и, по сути, главный метод, который запускает вместе с подгрузкой все остальные функции
 
 document.addEventListener('DOMContentLoaded', function() {
+  const defaultCity = document.querySelector('#default-city');
   let time = 400;
   let timer = 1;
   for (let i = 0; i < headerLinks.length; i++) {
@@ -288,6 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
   clearInterval();
 
   setTimeout(() => {
+    defaultCity.classList.add('active-city');
     calendar.style.marginLeft = '0';
     getToday();
     fillCalendar();
@@ -422,18 +424,49 @@ function udpateTime() {
   clock.firstElementChild.innerHTML = hours;
   clock.firstElementChild.nextElementSibling.nextElementSibling.innerHTML = minutes;
   clock.lastElementChild.innerHTML = seconds;
+
+  function cityTime() {
+    let cities = document.querySelectorAll('.header-link');
+    const defaultCity = document.querySelector('#default-city');
+
+    for (let i = 0; i < cities.length; i++) {
+      cities[i].addEventListener('click', event => {
+        let target = event.target;
+        if (!target.classList.contains('active-city')) {
+          for (let j = 0; j < cities.length; j++) {
+            cities[j].classList.remove('active-city');
+          }
+          target.classList.add('active-city');
+
+          if (target === cities[0]) {
+            console.log('New York');
+            hours = 30;
+            console.log(hours);
+            // hours = correctTimeDisplay(date.getHours() + 9);
+            clock.firstElementChild.innerHTML = hours;
+            //clockStart();
+          }
+        }
+      });
+    }
+  }
+  cityTime();
 }
 
 function clockStart() {
   setInterval(udpateTime, 1000);
   udpateTime();
+  console.log('time is updated');
 }
 
 clockStart();
 
 
+//  Отображение и работа "механических" часов
 
 function flipClock() {
+  let togglePin = document.querySelector('.toggle-pin');
+  togglePin.classList.toggle('toggle-pin-moved');
   calendar.classList.toggle('calendar-rotate');
   setTimeout(() => {
     analogClock.classList.toggle('show');
@@ -460,7 +493,9 @@ function analogClockGo() {
   setInterval(analogTime, 1000);
 }
 
+toggleBtn.addEventListener('click', flipClock);
 
 
 
-testBtn.addEventListener('click', flipClock);
+
+//cityTime();
